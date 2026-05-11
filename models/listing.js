@@ -3,12 +3,27 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const listingSchema = new Schema({
-    title: String,
-    description: String,
-    price: Number,
-    location: String,
-    image: String,
-    country : String
+    title:{
+        type : String,
+        required : true
+    },
+    description:{
+        type : String
+    },
+    price:{
+        type : Number
+    },
+    location:{
+        type : String
+    },
+    image:{
+        type : String,
+        set:(v)=>v ===""? "https://share.google/lha192KfayzqD0irI" :v,
+
+    },
+    country : {
+        type : String
+    }
 
 });
 
