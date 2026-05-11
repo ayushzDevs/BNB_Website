@@ -33,7 +33,7 @@ app.get("/",(req,res)=>{
 
 
 
-app.get("/testListening", (req,res)=>{
+app.get("/testListening", async (req,res)=>{
     let sampleListing = new Listing({
         title : "My New Villa",
         description : "This is a beautiful villa located in the heart of the city.",
@@ -42,7 +42,7 @@ app.get("/testListening", (req,res)=>{
         country : "India",
         
     })
-    sampleListing.save()
+    await sampleListing.save()
 })
 
 app.listen(port, () => {
