@@ -18,6 +18,7 @@ const listingSchema = new Schema({
     },
     image:{
         type : String,
+        default : "https://share.google/lha192KfayzqD0irI",
         set:(v)=>v ===""? "https://share.google/lha192KfayzqD0irI" :v,
 
     },
