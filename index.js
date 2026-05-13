@@ -43,6 +43,8 @@ app.get("/testListening", async (req,res)=>{
         
     })
     await sampleListing.save()
+    console.log("Sample listing saved to the database");
+    res.send("Sample listing created and saved to the database")
 })
 
 app.listen(port, () => {
