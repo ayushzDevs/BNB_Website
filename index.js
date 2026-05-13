@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 8080;
 const mongoose = require('mongoose');
-const Listing = require('../models/listing.js');
+const Listing = require('./models/listing.js');
 
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/BNB_Website"
