@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const listingSchema = new Schema({
     title:{
         type : String,
+        default : "Untitled Listing",
         required : true
     },
     description:{
@@ -18,8 +19,8 @@ const listingSchema = new Schema({
     },
     image:{
         type : String,
-        default : "https://share.google/lha192KfayzqD0irI",
-        set:(v)=>v ===""? "https://share.google/lha192KfayzqD0irI" :v,
+        default : "https://share.google/cGWvWkBLSyy7vbuEF",
+        set:(v)=>v ===""? "https://share.google/cGWvWkBLSyy7vbuEF" :v,
 
     },
     country : {

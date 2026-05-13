@@ -17,6 +17,7 @@
   "homepage": "https://github.com/ayushzDevs/BNB_Website#readme",
   "description": "",
   "dependencies": {
+    "ejs": "^5.0.2",
     "express": "^5.2.1",
     "method-override": "^3.0.0",
     "mongoose": "^9.6.2",

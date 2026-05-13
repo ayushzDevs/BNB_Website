@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BNB_Couples</title>
+</head>
+<body>
+    <h2>BNB_Couples</h2>
+    <div>
+        <% allListings.forEach(listing=>{ %>
+            <div style="border:1px solid black; margin:10px; padding:10px;">
+                <h3><%= listing.title %></h3>
+                <p><%= listing.description %></p>
+                <p>Price : <%= listing.price %></p>
+                <img src="<%= listing.image %>" alt="listing image" width="200px" height="200px">
+            </div>
+        <% }) %>
+    </div>
+</body>
+</html>
