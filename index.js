@@ -12,6 +12,8 @@ const mongoose = require('mongoose');
 const Listing = require('./models/listing.js');
 const { data: sampleListings } = require('./init/data.js');
 
+const methodoverride = require('method-override');
+app.use(methodoverride('_method'));
 
 
 // middlewares
@@ -58,6 +60,10 @@ app.get("/listings", async (req,res)=>{
 
 });
 
+// create route
+app.get("/listings/new",(req,res)=>{
+    res.render("listings/new.ejs")
+})
 
 // show route
 app.get("/listings/:id",async(req,res)=>{
@@ -69,8 +75,34 @@ app.get("/listings/:id",async(req,res)=>{
 
 
 
+app.post("/listings",async(req,res)=>{
+    const {title, description, price, location, country} = req.body;
+    const newListing = new Listing({
+        title,
+        description,
+        price,
+        location,
+        country
+    })
+    await newListing.save();
+    res.redirect("/listings")
+});
 
 
+
+// update route
+app.get("/listings/:id/edit", async(req,res)=>{
+    const {id} = req.params;
+    const listing = await Listing.findById(id);
+    res.render("listings/edit.ejs",{listing})
+})
+
+app.put("/listings/:id", async(req,res)=>{
+    const {id} = req.params;
+    const {title, description, price, location, country} = req.body;
+    await Listing.findByIdAndUpdate(id,{title, description, price, location, country});
+    res.redirect("/listings")
+})
 
 // app.get("/testListening", async (req,res)=>{
 //     let sampleListing = new Listing({

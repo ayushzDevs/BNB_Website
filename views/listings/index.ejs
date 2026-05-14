@@ -14,7 +14,12 @@
                 <p><%= listing.description %></p>
                 <p>Price : <%= listing.price %></p>
                 <img src="<%= listing.image %>" alt="listing image" width="200px" height="200px">
+                <br>
                 <a href="/listings/<%= listing._id %>">show details</a>
+                <br>
+                <a href="/listings/new">create new listing</a>
+                <br>
+                <a href="/listings/<%= listing._id %>/edit">edit listing</a>
             </div>
         <% }) %>
     </div>
