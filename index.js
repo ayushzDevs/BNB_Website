@@ -3,7 +3,7 @@ const app = express();
 const port = 8080;
 
 const path = require('path');
-app.set("view_ ngine","ejs");
+app.set("view engine","ejs");
 app.set("views", path.join(__dirname,"views"));
 
 
@@ -58,6 +58,13 @@ app.get("/listings", async (req,res)=>{
 
 });
 
+
+// show route
+app.get("/listings/:id",async(req,res)=>{
+    const {id} = req.params;
+    const listings = await Listing.findById(id);
+    res.render("listings/show.ejs",{listings})
+})
 
 
 

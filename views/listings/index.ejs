@@ -14,6 +14,7 @@
                 <p><%= listing.description %></p>
                 <p>Price : <%= listing.price %></p>
                 <img src="<%= listing.image %>" alt="listing image" width="200px" height="200px">
+                <a href="/listings/<%= listing._id %>">show details</a>
             </div>
         <% }) %>
     </div>
