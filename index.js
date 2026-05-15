@@ -12,6 +12,8 @@ const ejsmate = require('ejs-mate');
 app.engine('ejs', ejsmate);
 
 
+app.use(express.static(path.join(__dirname,"views/public")));
+
 const methodoverride = require('method-override');
 app.use(methodoverride('_method'));
 
