@@ -1,5 +1,6 @@
 .navbar{
     height: 5rem;
+    background-color: white;   
 }
 
 .fa-compass{
@@ -11,3 +12,4 @@
     color: black !important;
     font-size: 1.2rem;
 }
+
