@@ -17,6 +17,7 @@
   "homepage": "https://github.com/ayushzDevs/BNB_Website#readme",
   "description": "",
   "dependencies": {
+    "bootstrap": "^5.3.8",
     "ejs": "^5.0.2",
     "ejs-mate": "^4.0.0",
     "express": "^5.2.1",
