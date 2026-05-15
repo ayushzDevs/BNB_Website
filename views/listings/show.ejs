@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listing by id</title>
-</head>
+<% layout("/layouts/boilerplate") %>
 <body>
     <h1><%= listings.id %></h1>
     <p><%= listings.title %></p>
@@ -13,4 +7,3 @@
     <p>Location: <%= listings.location %></p>
     <p>Country: <%= listings.country %></p>
 </body>
-</html>
