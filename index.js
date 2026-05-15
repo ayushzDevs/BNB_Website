@@ -2,15 +2,15 @@ const express = require('express');
 const app = express();
 const port = 8080;
 
+
 const path = require('path');
 app.set("view engine","ejs");
 app.set("views", path.join(__dirname,"views"));
 
 
+const ejsmate = require('ejs-mate');
+app.engine('ejs', ejsmate);
 
-const mongoose = require('mongoose');
-const Listing = require('./models/listing.js');
-const { data: sampleListings } = require('./init/data.js');
 
 const methodoverride = require('method-override');
 app.use(methodoverride('_method'));
@@ -19,6 +19,11 @@ app.use(methodoverride('_method'));
 // middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
+
+
+const mongoose = require('mongoose');
+const Listing = require('./models/listing.js');
+const { data: sampleListings } = require('./init/data.js');
 
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/BNB_Website"
