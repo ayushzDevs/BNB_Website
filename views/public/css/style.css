@@ -1,6 +1,7 @@
 .navbar{
     height: 5rem;
-    background-color: white;   
+    background-color: white;
+
 }
 
 .fa-compass{
@@ -13,3 +14,38 @@
     font-size: 1.2rem;
 }
 
+
+/* footer */
+.f-info-links{
+    text-decoration: none ;
+    color: black;
+}
+
+.f-info-links:hover{
+    text-decoration: underline;
+    color: black;
+}
+
+
+.f-info-social, .f-info-links {
+    font-size: 1.2rem;
+    width: 100%;
+    margin-right: 0.5rem;
+}
+
+.f-info-social i{
+    margin-right: 0.5rem;
+}
+
+
+
+
+.footer_info{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap !important;
+    align-items: space-evenly;
+    height: 8rem;
+    background-color: antiquewhite;
+}
