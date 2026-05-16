@@ -1,3 +1,7 @@
+body{
+        font: "times new roman", serif;
+}
+
 .navbar{
     height: 5rem;
     background-color: white;
@@ -30,12 +34,16 @@
 .f-info-social, .f-info-links {
     font-size: 1.2rem;
     width: 100%;
-    margin-right: 0.5rem;
+    justify-content: center;
+    display: flex;
+    text-align: center;
+
 }
 
 .f-info-social i{
     margin-right: 0.5rem;
 }
+
 
 
 
@@ -48,4 +56,38 @@
     align-items: space-evenly;
     height: 8rem;
     background-color: antiquewhite;
+}
+
+/* cards */
+.row .card-body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap !important;
+    border: none;
+    margin-bottom: 2.6rem;
+}
+
+.card-img-top{
+    border-radius: 1rem;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+
+.card-body{
+    padding: 0 !important;
+    width: 100%;
+}
+
+.card-text{
+    font-weight: 400;
+
+}
+
+.btn-primary, .btn-warning, .btn-danger{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0.5rem !important;
 }

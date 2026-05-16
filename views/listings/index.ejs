@@ -1,21 +1,21 @@
 <% layout("/layouts/boilerplate") %>
 <body>
-    <h2>BNB_Couples</h2>
-    <div>
+    <b><h2>BNB_Couples</h2></b>
+    <div class="row">
+        
         <% allListings.forEach(listing=>{ %>
-            <div style="border:1px solid black; margin:10px; padding:10px;">
-                <h3><%= listing.title %></h3>
-                <p><%= listing.description %></p>
-                <p>Price : <%= listing.price %></p>
-                <img src="<%= listing.image %>" alt="listing image" width="200px" height="200px">
-                <br>
-                <a href="/listings/<%= listing._id %>">show details</a>
-                <br>
-                <a href="/listings/<%= listing._id %>/edit">edit listing</a>
-                <br>
-                <form action="/listings/<%= listing._id %>?_method=DELETE" method="post" style="display:inline;">
-                    <button type="submit">delete listing</button>
-                </form>
+            <div class="card" style="width: 18rem; margin: 10px;">
+                <img src="<%= listing.image %>" class="card-img-top" alt="<%= listing.title %>">
+                <div class="card-body">
+                    <h5 class="card-title"><%= listing.title %></h5>
+                    <p class="card-text"><%= listing.description %></p>
+                    <p class="card-text"><strong>Price: <%= listing.price %></strong></p>
+                    <a href="/listings/<%= listing._id %>" class="btn btn-primary">Show Details</a>
+                    <a href="/listings/<%= listing._id %>/edit" class="btn btn-warning">Edit</a>
+                    <form action="/listings/<%= listing._id %>?_method=DELETE" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
             </div>
         <% }) %>
     </div>
