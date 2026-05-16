@@ -1,9 +1,36 @@
 <% layout("/layouts/boilerplate") %>
 <body>
-    <h1><%= listings.id %></h1>
-    <p><%= listings.title %></p>
-    <p><%= listings.description %></p>
-    <p>Price: <%= listings.price %></p>
-    <p>Location: <%= listings.location %></p>
-    <p>Country: <%= listings.country %></p>
+    <section class="listing-show">
+        <div class="listing-show-card">
+            <div class="listing-show-media">
+                <img src="<%= listings.image %>" alt="<%= listings.title %>">
+            </div>
+            <div class="listing-show-body">
+                <div class="listing-show-heading">
+                    <h1><%= listings.title %></h1>
+                </div>
+                <p class="listing-show-description"><%= listings.description %></p>
+                <div class="listing-show-meta">
+                    <div>
+                        <span class="listing-show-label">Price</span>
+                        <span class="listing-show-value">$<%= listings.price %></span>
+                    </div>
+                    <div>
+                        <span class="listing-show-label">Location</span>
+                        <span class="listing-show-value"><%= listings.location %></span>
+                    </div>
+                    <div>
+                        <span class="listing-show-label">Country</span>
+                        <span class="listing-show-value"><%= listings.country %></span>
+                    </div>
+                </div>
+                <div class="listing-show-actions">
+                    <a href="/listings/<%= listings._id %>/edit" class="listing-show-btn primary">Edit Listing</a>
+                    <form action="/listings/<%= listings._id %>?_method=DELETE" method="post">
+                        <button type="submit" class="listing-show-btn danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
