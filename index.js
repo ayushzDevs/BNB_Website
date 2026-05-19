@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const port = 8080;
 
+const errors = require('./express_err.js');
+
 
 const path = require('path');
 app.set("view engine","ejs");
@@ -133,6 +135,29 @@ app.delete("/listings/:id",async(req,res)=>{
 //     console.log("Sample listing saved to the database");
 //     res.send("Sample listing created and saved to the database")
 // })
+
+const handlevalidationError = (err) => {
+    console.log("Validation error:", err.message);
+    const errorMessages = Object.values(err.errors).map(e => e.message);
+    return new errors(400, errorMessages.join(", "));
+}
+
+app.use((err,req,res,next)=>{
+    console.log(err.name);
+    if(err.name== "ValidationError"){
+        const error = handlevalidationError(err);
+        res.status(error.status).send(error.messages);
+    }
+
+    next(err);
+
+})
+
+
+app.use((req,res)=>{
+    const error = new errors(404, "Page not found");
+    res.status(error.status).send(error.messages);
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
