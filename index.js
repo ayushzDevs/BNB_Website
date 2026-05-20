@@ -116,6 +116,9 @@ app.get("/listings/:id/edit", wrapAsync(async(req,res)=>{
 }));
 
 app.put("/listings/:id", wrapAsync(async(req,res)=>{
+    if(!req.body.listing){
+        throw new errors(400, "Invalid listing data , send valid data for listing");
+    }
     const {id} = req.params;
     const {title, description, price, location, country} = req.body;
     await Listing.findByIdAndUpdate(id,{title, description, price, location, country});
