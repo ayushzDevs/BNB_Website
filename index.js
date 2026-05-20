@@ -163,8 +163,8 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-    const { status = 500, messages, message = "Internal Server Error" } = err;
-    res.status(status).send(messages || message);
+    const { status = 500, messages, message = "Internal Server Error" } = err; 
+    res.render("error.ejs",{err})
 });
 
 
