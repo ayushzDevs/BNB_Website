@@ -94,14 +94,8 @@ app.get("/listings/:id",wrapAsync(async(req,res)=>{
 
 
 app.post("/listings",wrapAsync(async(req,res)=>{
-    const {title, description, price, location, country} = req.body;
-    const newListing = new Listing({
-        title,
-        description,
-        price,
-        location,
-        country
-    })
+    const {title, description, price, location, country, imageUrl} = req.body;
+    const newListing = new Listing({ title, description, price, location, country, image: imageUrl });
     await newListing.save();
     res.redirect("/listings")
 }));
@@ -159,8 +153,13 @@ app.use((err,req,res,next)=>{
 })
 
 
+app.use((req, res, next) => {
+  next(new errors(404, "Page Not Found"));
+});
+
 app.use((err,req,res,next)=>{
-    res.status(500).send("Something went wrong");
+    let {status,message} = err;
+    res.status(status).send(message);
     return next(err);
 })
 
