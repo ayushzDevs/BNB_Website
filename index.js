@@ -3,6 +3,11 @@ const app = express();
 const port = 8080;
 
 const errors = require('./express_err.js');
+const handlevalidationError = (err) => {
+    console.log("Validation error:", err.message);
+    const errorMessages = Object.values(err.errors).map(e => e.message);
+    return new errors(400, errorMessages.join(", "));
+}
 
 
 const path = require('path');
@@ -136,11 +141,7 @@ app.delete("/listings/:id",async(req,res)=>{
 //     res.send("Sample listing created and saved to the database")
 // })
 
-const handlevalidationError = (err) => {
-    console.log("Validation error:", err.message);
-    const errorMessages = Object.values(err.errors).map(e => e.message);
-    return new errors(400, errorMessages.join(", "));
-}
+
 
 app.use((err,req,res,next)=>{
     console.log(err.name);
