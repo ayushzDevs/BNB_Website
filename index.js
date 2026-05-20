@@ -94,6 +94,12 @@ app.get("/listings/:id",wrapAsync(async(req,res)=>{
 
 
 app.post("/listings",wrapAsync(async(req,res)=>{
+    if(!req.body.imageUrl){
+        req.body.imageUrl = "https://source.unsplash.com/collection/483251/800x600";
+    }
+    if(!req.body.listing){
+        throw new errors(400, "Invalid listing data , send valid data for listing");
+    }
     const {title, description, price, location, country, imageUrl} = req.body;
     const newListing = new Listing({ title, description, price, location, country, image: imageUrl });
     await newListing.save();
@@ -141,27 +147,22 @@ app.delete("/listings/:id",wrapAsync(async(req,res)=>{
 
 
 
-app.use((err,req,res,next)=>{
-    console.log(err.name);
-    if(err.name== "ValidationError"){
+app.use((err, req, res, next) => {
+    if (err.name === "ValidationError") {
         const error = handlevalidationError(err);
-        res.status(error.status).send(error.messages);
+        return res.status(error.status).send(error.messages);
     }
-
     next(err);
-
-})
-
-
-app.use((req, res, next) => {
-  next(new errors(404, "Page Not Found"));
 });
 
-app.use((err,req,res,next)=>{
-    let {status,message} = err;
-    res.status(status).send(message);
-    return next(err);
-})
+app.use((req, res, next) => {
+    next(new errors(404, "Page Not Found"));
+});
+
+app.use((err, req, res, next) => {
+    const { status = 500, messages, message = "Internal Server Error" } = err;
+    res.status(status).send(messages || message);
+});
 
 
 app.listen(port, () => {
