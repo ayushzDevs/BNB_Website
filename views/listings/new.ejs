@@ -1,33 +1,41 @@
 <% layout("/layouts/boilerplate") %>
-<body>
     <section class="listing-form-wrap">
         <div class="listing-form-header">
             <h2>Create New Listing</h2>
             <p>Share the essentials so guests can find your space.</p>
         </div>
 
-        <form action="/listings" method="post" class="listing-form" nonvalidate>
-            <div class="form-field">
-                <label for="title">Title</label>
-                <input type="text" id="title" name="title" placeholder="Cozy sunset studio" required>
+        <form action="/listings" method="post" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label class="form-label" for="title">Title</label>
+                <input class="form-control" type="text" id="title" name="title" required>
+                <div class="invalid-feedback">Title is required.</div>
             </div>
-            <div class="form-field">
-                <label for="description">Description</label>
-                <textarea id="description" name="description" rows="4" placeholder="Describe the vibe, amenities, and what makes it special." required></textarea>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="4" placeholder="Describe the vibe, amenities, and what makes it special." required></textarea>
+                <div class="invalid-feedback">Description is required.</div>
             </div>
-            <div class="form-field">
-                <label for="price">Price</label>
-                <input type="number" id="price" name="price" step="0.01" placeholder="150" required>
+            <div class="mb-3">
+                <label class="form-label" for="price">Price</label>
+                <input class="form-control" type="number" id="price" name="price" step="0.01" placeholder="150" required>
+                <div class="invalid-feedback">Price is required.</div>
             </div>
-            <div class="form-field">
-                <label for="location">Location</label>
-                <input type="text" id="location" name="location" placeholder="Mumbai" required>
+            <div class="mb-3">
+                <label class="form-label" for="location">Location</label>
+                <input class="form-control" type="text" id="location" name="location" placeholder="Mumbai" required>
+                <div class="invalid-feedback">Location is required.</div>
             </div>
-            <div class="form-field">
-                <label for="country">Country</label>
-                <input type="text" id="country" name="country" placeholder="India" required>
+            <div class="mb-3">
+                <label class="form-label" for="country">Country</label>
+                <input class="form-control" type="text" id="country" name="country" placeholder="India" required>
+                <div class="invalid-feedback">Country is required.</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="imageUrl">Image URL</label>
+                <input class="form-control" type="url" id="imageUrl" name="imageUrl" placeholder="https://example.com/photo.jpg">
+                <div class="invalid-feedback">Image URL is required.</div>
             </div>
             <button type="submit" class="listing-form-submit">Create Listing</button>
         </form>
     </section>
-</body>
