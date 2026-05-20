@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 8080;
 
-const errors = require('./express_err.js');
+const errors = require('./utils/express_err.js');
 const handlevalidationError = (err) => {
     console.log("Validation error:", err.message);
     const errorMessages = Object.values(err.errors).map(e => e.message);
@@ -28,6 +28,10 @@ app.use(methodoverride('_method'));
 // middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
+
+
+const wrapAsync = require('./utils/wrapAsync.js');
+
 
 
 const mongoose = require('mongoose');
@@ -67,12 +71,12 @@ app.get("/",(req,res)=>{
     res.send("I am root")     
 })
 
-app.get("/listings", async (req,res)=>{
+app.get("/listings", wrapAsync(async (req,res)=>{
     const allListings = await Listing.find({});
     res.render("listings/index.ejs",{allListings})
 
 
-});
+}));
 
 // create route
 app.get("/listings/new",(req,res)=>{
@@ -80,16 +84,16 @@ app.get("/listings/new",(req,res)=>{
 })
 
 // show route
-app.get("/listings/:id",async(req,res)=>{
+app.get("/listings/:id",wrapAsync(async(req,res)=>{
     const {id} = req.params;
     const listings = await Listing.findById(id);
     res.render("listings/show.ejs",{listings})
-})
+}));
 
 
 
 
-app.post("/listings",async(req,res)=>{
+app.post("/listings",wrapAsync(async(req,res)=>{
     const {title, description, price, location, country} = req.body;
     const newListing = new Listing({
         title,
@@ -100,32 +104,32 @@ app.post("/listings",async(req,res)=>{
     })
     await newListing.save();
     res.redirect("/listings")
-});
+}));
 
 
 
 // update route
-app.get("/listings/:id/edit", async(req,res)=>{
+app.get("/listings/:id/edit", wrapAsync(async(req,res)=>{
     const {id} = req.params;
     const listing = await Listing.findById(id);
     res.render("listings/edit.ejs",{listing})
-})
+}));
 
-app.put("/listings/:id", async(req,res)=>{
+app.put("/listings/:id", wrapAsync(async(req,res)=>{
     const {id} = req.params;
     const {title, description, price, location, country} = req.body;
     await Listing.findByIdAndUpdate(id,{title, description, price, location, country});
     res.redirect("/listings")
-})
+}));
 
 
 
 // delete route
-app.delete("/listings/:id",async(req,res)=>{
+app.delete("/listings/:id",wrapAsync(async(req,res)=>{
     const {id} = req.params;
     await Listing.findByIdAndDelete(id);
     res.redirect("/listings")
-})
+}));
 
 // app.get("/testListening", async (req,res)=>{
 //     let sampleListing = new Listing({
@@ -155,10 +159,11 @@ app.use((err,req,res,next)=>{
 })
 
 
-app.use((req,res)=>{
-    const error = new errors(404, "Page not found");
-    res.status(error.status).send(error.messages);
-});
+app.use((err,req,res,next)=>{
+    res.status(500).send("Something went wrong");
+    return next(err);
+})
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
