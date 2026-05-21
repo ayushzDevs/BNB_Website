@@ -19,6 +19,8 @@ const validatelisting = (req,res,next)=>{
     let {error: listingValidation} = listingschema.validate(req.body);
     console.log("Validation result:", listingValidation);
     if(listingValidation){
+        let ermsg = listingValidation.details.map(d => d.message);
+        console.log("Validation errors:", ermsg);
         throw new errors(400, "Invalid listing data", listingValidation.details.map(d => d.message));
     }
     else{
