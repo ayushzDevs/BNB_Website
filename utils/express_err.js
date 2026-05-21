@@ -1,6 +1,6 @@
 class errors extends Error{
-    constructor(status , messages){
-        super();
+    constructor(status, message, messages = null){
+        super(message);
         this.status = status;
         this.messages = messages;
     }

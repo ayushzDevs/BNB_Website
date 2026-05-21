@@ -6,7 +6,7 @@ const errors = require('./utils/express_err.js');
 const handlevalidationError = (err) => {
     console.log("Validation error:", err.message);
     const errorMessages = Object.values(err.errors).map(e => e.message);
-    return new errors(400, errorMessages.join(", "));
+    return new errors(400, "Validation failed", errorMessages);
 }
 
 
@@ -102,6 +102,22 @@ app.post("/listings",wrapAsync(async(req,res)=>{
     }
     const {title, description, price, location, country, imageUrl} = req.body;
     const newListing = new Listing({ title, description, price, location, country, image: imageUrl });
+
+    if(!newListing.description){
+        throw new errors(400, "Description is required for the listing");
+    }
+    if(!newListing.price){
+        throw new errors(400, "Price is required for the listing");
+    }
+    if(!newListing.location){
+        throw new errors(400, "Location is required for the listing");
+    }
+    if(!newListing.country){
+        throw new errors(400, "Country is required for the listing");
+    }
+    if(!newListing.title){
+        throw new errors(400, "Title is required for the listing");
+    }
     await newListing.save();
     res.redirect("/listings")
 }));
@@ -153,7 +169,7 @@ app.delete("/listings/:id",wrapAsync(async(req,res)=>{
 app.use((err, req, res, next) => {
     if (err.name === "ValidationError") {
         const error = handlevalidationError(err);
-        return res.status(error.status).send(error.messages);
+        return res.status(error.status).send(error.messages || error.message);
     }
     next(err);
 });
@@ -164,7 +180,8 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
     const { status = 500, messages, message = "Internal Server Error" } = err; 
-    res.render("error.ejs",{err})
+    res.status(status);
+    res.render("error.ejs", { err: { status, message, messages } });
 });
 
 
