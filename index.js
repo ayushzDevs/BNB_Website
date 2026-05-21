@@ -1,7 +1,10 @@
+// express app setup
 const express = require('express');
 const app = express();
 const port = 8080;
 
+
+// error handling
 const errors = require('./utils/express_err.js');
 const handlevalidationError = (err) => {
     console.log("Validation error:", err.message);
@@ -10,17 +13,32 @@ const handlevalidationError = (err) => {
 }
 
 
+// schema validation
+const { listingschema } = require('./schema.js');
+const validatelisting = (req,res,next)=>{
+    let {error: listingValidation} = listingschema.validate(req.body);
+    console.log("Validation result:", listingValidation);
+    if(listingValidation){
+        throw new errors(400, "Invalid listing data", listingValidation.details.map(d => d.message));
+    }
+    else{
+        next();
+    }
+}
+
+// view engine setup
 const path = require('path');
 app.set("view engine","ejs");
 app.set("views", path.join(__dirname,"views"));
 
-
+// ejs mate setup
 const ejsmate = require('ejs-mate');
 app.engine('ejs', ejsmate);
 
-
+// static files setup
 app.use(express.static(path.join(__dirname,"views/public")));
 
+// method override setup
 const methodoverride = require('method-override');
 app.use(methodoverride('_method'));
 
@@ -30,10 +48,11 @@ app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 
 
+// async wrapper for error handling in async functions
 const wrapAsync = require('./utils/wrapAsync.js');
 
 
-
+// database setup
 const mongoose = require('mongoose');
 const Listing = require('./models/listing.js');
 const { data: sampleListings } = require('./init/data.js');
@@ -66,7 +85,7 @@ async function seedDB(){
 
 
 
-
+// routes
 app.get("/",(req,res)=>{
     res.send("I am root")     
 })
@@ -93,31 +112,16 @@ app.get("/listings/:id",wrapAsync(async(req,res)=>{
 
 
 
-app.post("/listings",wrapAsync(async(req,res)=>{
-    if(!req.body.imageUrl){
-        req.body.imageUrl = "https://source.unsplash.com/collection/483251/800x600";
-    }
-    if(!req.body.listing){
+app.post("/listings",validatelisting,wrapAsync(async(req,res)=>{
+    const payload = req.body.listing || req.body.newListing || req.body;
+    if(!payload){
         throw new errors(400, "Invalid listing data , send valid data for listing");
     }
-    const {title, description, price, location, country, imageUrl} = req.body;
-    const newListing = new Listing({ title, description, price, location, country, image: imageUrl });
+    const { title, description, price, location, country, imageUrl } = payload;
+    const image = imageUrl || "https://source.unsplash.com/collection/483251/800x600";
+    const newListing = new Listing({ title, description, price, location, country, image });
 
-    if(!newListing.description){
-        throw new errors(400, "Description is required for the listing");
-    }
-    if(!newListing.price){
-        throw new errors(400, "Price is required for the listing");
-    }
-    if(!newListing.location){
-        throw new errors(400, "Location is required for the listing");
-    }
-    if(!newListing.country){
-        throw new errors(400, "Country is required for the listing");
-    }
-    if(!newListing.title){
-        throw new errors(400, "Title is required for the listing");
-    }
+    
     await newListing.save();
     res.redirect("/listings")
 }));
@@ -125,18 +129,15 @@ app.post("/listings",wrapAsync(async(req,res)=>{
 
 
 // update route
-app.get("/listings/:id/edit", wrapAsync(async(req,res)=>{
+app.get("/listings/:id/edit",  wrapAsync(async(req,res)=>{
     const {id} = req.params;
     const listing = await Listing.findById(id);
     res.render("listings/edit.ejs",{listing})
 }));
 
-app.put("/listings/:id", wrapAsync(async(req,res)=>{
-    if(!req.body.listing){
-        throw new errors(400, "Invalid listing data , send valid data for listing");
-    }
+app.put("/listings/:id", validatelisting, wrapAsync(async(req,res)=>{
     const {id} = req.params;
-    const {title, description, price, location, country} = req.body;
+    const {title, description, price, location, country} = payload;
     await Listing.findByIdAndUpdate(id,{title, description, price, location, country});
     res.redirect("/listings")
 }));
