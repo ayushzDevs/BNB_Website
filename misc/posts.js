@@ -33,25 +33,33 @@ const user = mongoose.model("user", userSchema);
 const post = mongoose.model("post", postSchema);
 
 
-const addData = async()=>{
-    let user1 = new user({
-        username: "user1",
-        email: "aaa@bbb.com"
-    })
+// const addData = async()=>{
+//     let user1 = new user({
+//         username: "user1",
+//         email: "aaa@bbb.com"
+//     })
 
-    let user2 = new user({
-        username: "user2",
-        email: "ccc@ddd.com"
-    });
+//     let user2 = new user({
+//         username: "user2",
+//         email: "ccc@ddd.com"
+//     });
 
-    let post9 = new post({
-        content: "This is the fourth post",
-        likes: 100,
-        user: user1._id,
-    });
-    await user1.save();
-    await post9.save();
-    console.log("Data added successfully");
-}
+//     let post9 = new post({
+//         content: "This is the fourth post",
+//         likes: 100,
+//         user: user1._id,
+//     });
+//     await user1.save();
+//     await post9.save();
+//     console.log("Data added successfully");
+// }
 
-addData();
+// addData();
+
+
+const getpost = async()=>{
+    let res = await post.find({}).populate("user","username");
+    console.log(res);
+};
+
+getpost();
