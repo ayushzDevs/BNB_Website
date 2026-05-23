@@ -10,7 +10,7 @@ main().then(()=>{
 });
 
 async function main(){
-    await mongoose.connect("mongodb://127.0.0.1:27017/one_to_many");
+    await mongoose.connect("mongodb://127.0.0.1:27017/ord");
     await findusr();
 };
 
@@ -62,3 +62,10 @@ const findcustomer = async()=>{
 };
 
 findcustomer();
+
+
+const addCust = async()=>{
+    let newcust = new customer({
+    name: "customer1",
+    });
+}
