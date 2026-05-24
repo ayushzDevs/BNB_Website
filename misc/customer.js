@@ -11,7 +11,7 @@ main().then(()=>{
 
 async function main(){
     await mongoose.connect("mongodb://127.0.0.1:27017/ord");
-    await findusr();
+    // await findusr();
 };
 
 
@@ -24,27 +24,27 @@ const orderSchema = new Schema({
 
 const order = mongoose.model("order",orderSchema);
 
-// const findorders = async()=>{
-//     let res = await order.insertMany(
-//         [
-//             {
-//                 item: "item1",
-//                 price: 100,
-//             },
-//             {
-//                 item: "item2",
-//                 price: 200,
-//             },
-//              {
-//                 item: "item3",
-//                 price: 300,
-//             },
-//         ]
-//     );
-//     console.log(res);
-// }
+const findorders = async()=>{
+    let res = await order.insertMany(
+        [
+            {
+                item: "item1",
+                price: 100,
+            },
+            {
+                item: "item2",
+                price: 200,
+            },
+             {
+                item: "item3",
+                price: 300,
+            },
+        ]
+    );
+    console.log(res);
+}
 
-// findorders();
+findorders();
 
 const customer_schema = new Schema({
     name : String,
@@ -68,4 +68,27 @@ const addCust = async()=>{
     let newcust = new customer({
     name: "customer1",
     });
+
+    let neworder = new order({
+        item: "pizza",
+        price : 500
+    });
+
+    newcust.orders.push(neworder);
+    
+    await neworder.save();
+    await newcust.save();
+
+    console.log("Customer and order added successfully");
 }
+
+
+addcust();
+
+// const delcust = async()=>{
+//     await customer.deleteMany({});
+//     await order.deleteMany({});
+//     console.log("All customers and orders deleted successfully");
+// }
+
+delcust();
