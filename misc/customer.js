@@ -20,7 +20,13 @@ const orderSchema = new Schema({
     price: Number,
 });
 
+Schema.pre("findOneAndDelete", async()=>{
+    console.log("pree middleware")
+})
 
+Schema.post("findOneAndDelete", async()=>{
+    console.log("post middleware")
+})
 
 const order = mongoose.model("order",orderSchema);
 
