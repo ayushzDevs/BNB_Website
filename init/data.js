@@ -350,4 +350,27 @@ const sampleListings = [
   },
 ];
 
-module.exports = { data: sampleListings };
+const sampleReviews = [
+  {
+    rating: 5,
+    comment: "Amazing stay. Clean, quiet, and exactly as described."
+  },
+  {
+    rating: 4,
+    comment: "Great location and comfy bed. Would book again."
+  },
+  {
+    rating: 3,
+    comment: "Nice place, but check-in took longer than expected."
+  },
+  {
+    rating: 5,
+    comment: "Perfect for a weekend trip. The view was stunning."
+  },
+  {
+    rating: 4,
+    comment: "Host was responsive and helpful."
+  }
+];
+
+module.exports = { data: sampleListings, reviews: sampleReviews };

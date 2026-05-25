@@ -14,7 +14,7 @@ const handlevalidationError = (err) => {
 
 
 // schema validation
-const { listingschema } = require('./schema.js');
+const { listingschema, reviewSchema } = require('./schema.js');
 const validatelisting = (req,res,next)=>{
     let {error: listingValidation} = listingschema.validate(req.body);
     console.log("Validation result:", listingValidation);
@@ -26,6 +26,14 @@ const validatelisting = (req,res,next)=>{
     else{
         next();
     }
+}
+
+const validateReview = (req, res, next) => {
+    const { error: reviewValidation } = reviewSchema.validate(req.body);
+    if (reviewValidation) {
+        throw new errors(400, "Invalid review data", reviewValidation.details.map(d => d.message));
+    }
+    next();
 }
 
 // view engine setup
@@ -57,7 +65,8 @@ const wrapAsync = require('./utils/wrapAsync.js');
 // database setup
 const mongoose = require('mongoose');
 const Listing = require('./models/listing.js');
-const { data: sampleListings } = require('./init/data.js');
+const Review = require('./models/review.js');
+const { data: sampleListings, reviews: sampleReviews } = require('./init/data.js');
 
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/BNB_Website"
@@ -76,13 +85,26 @@ async function main(){
 }
 
 async function seedDB(){
+    const existingListings = await Listing.countDocuments();
+    if (existingListings > 0) {
+        console.log("Seed skipped: listings already exist");
+        return;
+    }
     await Listing.deleteMany({});
+    await Review.deleteMany({});
     const listingsWithUrl = sampleListings.map(listing => ({
         ...listing,
         image: listing.image.url
     }));
-    await Listing.insertMany(listingsWithUrl);
-    console.log("Database seeded with sample listings");
+    for (let i = 0; i < listingsWithUrl.length; i++) {
+        const listing = new Listing(listingsWithUrl[i]);
+        const first = sampleReviews[i % sampleReviews.length];
+        const second = sampleReviews[(i + 1) % sampleReviews.length];
+        const reviewDocs = await Review.insertMany([first, second]);
+        listing.reviews.push(...reviewDocs.map(r => r._id));
+        await listing.save();
+    }
+    console.log("Database seeded with sample listings and reviews");
 }
 
 
@@ -107,7 +129,10 @@ app.get("/listings/new",(req,res)=>{
 // show route
 app.get("/listings/:id",wrapAsync(async(req,res)=>{
     const {id} = req.params;
-    const listings = await Listing.findById(id);
+    const listings = await Listing.findById(id).populate("reviews");
+    if (!listings) {
+        throw new errors(404, "Listing Not Found");
+    }
     res.render("listings/show.ejs",{listings})
 }));
 
@@ -126,6 +151,28 @@ app.post("/listings",validatelisting,wrapAsync(async(req,res)=>{
     
     await newListing.save();
     res.redirect("/listings")
+}));
+
+// reviews
+app.post("/listings/:id/reviews", validateReview, wrapAsync(async (req, res) => {
+    const { id } = req.params;
+    const listing = await Listing.findById(id);
+    if (!listing) {
+        throw new errors(404, "Listing Not Found");
+    }
+    const { rating, comment } = req.body.review;
+    const review = new Review({ rating, comment });
+    await review.save();
+    listing.reviews.push(review);
+    await listing.save();
+    res.redirect(`/listings/${id}`);
+}));
+
+app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/listings/${id}`);
 }));
 
 

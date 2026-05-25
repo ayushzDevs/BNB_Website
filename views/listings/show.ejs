@@ -30,6 +30,30 @@
                         <button type="submit" class="listing-show-btn danger">Delete</button>
                     </form>
                 </div>
+
+                <div>
+                    <h4>Reviews:</h4>
+                    <% listings.reviews.forEach(review => { %>
+                        <div class="review">
+                            <p><strong>Rating:</strong> <%= review.rating %> / 5</p>
+                            <p><%= review.comment %></p>
+                            <form action="/listings/<%= listings._id %>/reviews/<%= review._id %>?_method=DELETE" method="post">
+                                <button type="submit" class="listing-show-btn danger">Delete Review</button>
+                            </form>
+                        </div>
+                    <% }) %>
+                    <form action="/listings/<%= listings._id %>/reviews" method="post">
+                        <div>
+                            <label for="rating">Add Rating</label>
+                            <input id="rating" name="review[rating]" type="range" min="1" max="5" step="1" required>
+                        </div>
+                        <div>
+                            <label for="comment">comments</label>
+                            <textarea name="review[comment]" id="comment" cols="30" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="listing-show-btn primary">Submit Review</button>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
