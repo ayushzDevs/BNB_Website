@@ -4,6 +4,33 @@ const app = express();
 const port = 8080;
 
 
+// cookies
+const cookieParser = require('cookie-parser');
+app.use(cookieParser("secretcode"));
+
+app.use((req, res, next) => {
+  res.cookie("clientIp", req.ip, {
+    signed: true,
+    httpOnly: true,
+    sameSite: "lax",
+    // secure: true, // enable in production with HTTPS
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
+  next();
+});
+
+app.get("/verify",(req,res)=>{
+    const signedcookies = req.signedCookies;
+    console.log("Signed Cookies:", signedcookies);
+    if(signedcookies.clientIp=== req.ip){
+        res.send("Cookie is valid!");
+    }
+    else{
+        res.send("Cookie is invalid or has been tampered with.");
+    }
+})
+
+
 // error handling
 const errors = require('./utils/express_err.js');
 const handlevalidationError = (err) => {
@@ -11,6 +38,10 @@ const handlevalidationError = (err) => {
     const errorMessages = Object.values(err.errors).map(e => e.message);
     return new errors(400, "Validation failed", errorMessages);
 }
+
+
+
+
 
 
 // schema validation
@@ -132,6 +163,8 @@ app.use((err, req, res, next) => {
     res.status(status);
     res.render("error.ejs", { err: { status, message, messages } });
 });
+
+
 
 
 app.listen(port, () => {
