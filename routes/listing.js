@@ -4,6 +4,8 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const Listing = require("../models/listing.js");
 const Review = require("../models/review.js");
 const { listingschema, reviewSchema } = require('../schema.js');
+const errors = require('../utils/express_err.js');
+
 const validatelisting = (req,res,next)=>{
     let {error: listingValidation} = listingschema.validate(req.body);
     console.log("Validation result:", listingValidation);
@@ -17,6 +19,8 @@ const validatelisting = (req,res,next)=>{
     }
 }
 
+
+
 const validateReview = (req, res, next) => {
     const { error: reviewValidation } = reviewSchema.validate(req.body);
     if (reviewValidation) {
@@ -24,8 +28,6 @@ const validateReview = (req, res, next) => {
     }
     next();
 }
-
-const errors = require('../utils/express_err.js');
 
 
 router.get("/", wrapAsync(async (req,res)=>{
@@ -64,6 +66,7 @@ router.post("/",validatelisting,wrapAsync(async(req,res)=>{
 
     
     await newListing.save();
+    req.flash("success", "new listing created")
     res.redirect("/listings")
 }));
 

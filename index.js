@@ -4,6 +4,13 @@ const app = express();
 const port = 8080;
 
 
+
+const session = require("express-session");
+const flash = require("connect-flash");
+
+
+
+
 // cookies
 const cookieParser = require('cookie-parser');
 app.use(cookieParser("secretcode"));
@@ -18,6 +25,27 @@ app.use((req, res, next) => {
   });
   next();
 });
+
+
+const sessionOptions = {
+    secret : "mysupersecretcode",
+    resave: false,
+    saveUninitialized:true,
+    cookie:{
+        expires: Date.now() + 1000*60*60*24*3,
+        maxAge : 1000*60*60*24*3,
+        httpOnly: true
+    }
+}
+
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use((req,res,next)=>{
+    res.locals.success = req.flash("success");
+    return next()
+})
+
 
 app.get("/verify",(req,res)=>{
     const signedcookies = req.signedCookies;
