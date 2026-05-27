@@ -2,7 +2,16 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+
+const flash = require('connect-flash');
+
+const path = require('path');
+app.set("view engine","ejs");
+app.set("views", path.join(__dirname,"views"));
+
+
 const session = require('express-session');
+app.use(flash());
 const sessionOptions = {
     secret: "mysupersecretstring",
     resave: false,
@@ -23,12 +32,13 @@ app.get("/register",(req,res)=>{
     let {name="anonymous"} = req.query;
     req.session.name = name;
     console.log(req.session.name);
+    req.flash('success', 'user registered successfully!')
     res.redirect("/hello");
 })
 
 app.get("/hello",(req,res)=>{
-    res.send(`hello ${req.session.name}`);
-    
+    const messages = req.flash('success');
+    res.render("page", { name:req.session.name, messages });
 })
 
 // app.get("/reqcount",(req,res)=>{
