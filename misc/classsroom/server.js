@@ -3,13 +3,14 @@ const app = express();
 const port = 3000;
 
 const session = require('express-session');
-
-app.use(session({
-    secret: 'mysupersecretstring',
+const sessionOptions = {
+    secret: "mysupersecretstring",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false, maxAge: 7 * 24 * 60 * 60 * 1000 } // 1 week
-}))
+    cookie: { secure: false } // Set to true if using HTTPS
+}
+
+app.use(session(sessionOptions));
 
 
 app.get("/test",(req,res)=>{
@@ -17,6 +18,30 @@ app.get("/test",(req,res)=>{
 
 })
 
+app.get("/register",(req,res)=>{
+
+    let {name="anonymous"} = req.query;
+    req.session.name = name;
+    console.log(req.session.name);
+    res.redirect("/hello");
+})
+
+app.get("/hello",(req,res)=>{
+    res.send(`hello ${req.session.name}`);
+    
+})
+
+// app.get("/reqcount",(req,res)=>{
+//     if(req.session.views){
+//         req.session.views++;
+//         res.send(`You have visited this page ${req.session.views} times.`);
+//     }
+//     else{
+//         req.session.views = 1;
+//         res.send("Welcome to this page for the first time!");
+//     }
+// }
+// )
 // using express sessions
 
 
