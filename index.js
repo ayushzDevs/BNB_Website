@@ -141,7 +141,7 @@ async function main(){
 
 async function seedDB(){
     const existingListings = await Listing.countDocuments();
-    if (existingListings > 0) {
+    if (existingListings >= sampleListings.length) {
         console.log("Seed skipped: listings already exist");
         return;
     }
@@ -166,7 +166,7 @@ async function seedDB(){
 
 // routes
 app.get("/",(req,res)=>{
-    res.send("I am root")     
+    res.redirect("/listings");    
 })
 
 

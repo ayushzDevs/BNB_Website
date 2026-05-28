@@ -10,6 +10,9 @@ const saveReturnTo = (req, res, next) => {
 };
 
 router.get("/login", userController.renderLogin);
+router.get("/register", userController.renderRegister);
+
+router.post("/register", userController.register);
 
 router.post(
   "/login",

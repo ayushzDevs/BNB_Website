@@ -264,7 +264,13 @@ a{
     overflow: hidden;
     box-shadow: var(--shadow);
     display: grid;
+    transition: transform 220ms ease, box-shadow 220ms ease;
     animation: fadeIn 420ms ease;
+}
+
+.listing-tile:hover{
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 24px 50px rgba(24, 18, 12, 0.2);
 }
 
 .tile-media img{
@@ -272,6 +278,11 @@ a{
     height: 220px;
     object-fit: cover;
     display: block;
+    transition: transform 240ms ease;
+}
+
+.listing-tile:hover .tile-media img{
+    transform: scale(1.04);
 }
 
 .tile-body{
@@ -438,6 +449,16 @@ a{
     box-shadow: var(--shadow);
     display: grid;
     gap: 1.2rem;
+}
+
+.form-helper{
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.link-underline{
+    text-decoration: underline;
+    font-weight: 600;
 }
 
 .form-row{

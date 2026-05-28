@@ -1,5 +1,29 @@
+const User = require("../models/user.model.js");
+
 const renderLogin = (req, res) => {
   res.render("users/login.ejs");
+};
+
+const renderRegister = (req, res) => {
+  res.render("users/register.ejs");
+};
+
+const register = async (req, res, next) => {
+  try {
+    const { username, email, password } = req.body;
+    const user = new User({ username, email });
+    const registeredUser = await User.register(user, password);
+    req.login(registeredUser, (err) => {
+      if (err) {
+        return next(err);
+      }
+      req.flash("success", "Welcome to BNB Couples!");
+      res.redirect("/listings");
+    });
+  } catch (err) {
+    req.flash("error", err.message);
+    res.redirect("/register");
+  }
 };
 
 const login = (req, res) => {
@@ -19,4 +43,4 @@ const logout = (req, res, next) => {
   });
 };
 
-module.exports = { renderLogin, login, logout };
+module.exports = { renderLogin, renderRegister, register, login, logout };
