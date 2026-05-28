@@ -49,7 +49,7 @@
                     <span><%= listing.location %></span>
                     <span><%= listing.country %></span>
                 </div>
-                <% if (currentUser && listing.owner && listing.owner.toString() === currentUser._id.toString()) { %>
+                <% if (currentUser && (isAdmin || (listing.owner && listing.owner.toString() === currentUser._id.toString()))) { %>
                     <div class="tile-actions">
                         <a href="/listings/<%= listing._id %>/edit" class="btn-ghost">Edit</a>
                         <form action="/listings/<%= listing._id %>?_method=DELETE" method="post">

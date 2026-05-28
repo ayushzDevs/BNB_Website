@@ -80,6 +80,22 @@ a{
     letter-spacing: 0.02em;
 }
 
+.admin-badge{
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background: rgba(44, 111, 104, 0.14);
+    color: var(--sea);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.admin-badge.subtle{
+    background: rgba(20, 17, 15, 0.08);
+    color: var(--muted);
+}
+
 .brand-mark{
     width: 2.2rem;
     height: 2.2rem;
@@ -357,6 +373,13 @@ a{
     align-items: baseline;
     justify-content: space-between;
     gap: 1rem;
+}
+
+.listing-title-wrap{
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    flex-wrap: wrap;
 }
 
 .listing-show-heading h1{

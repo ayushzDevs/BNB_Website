@@ -61,6 +61,7 @@ app.use((req,res,next)=>{
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     res.locals.currentUser = req.user;
+    res.locals.isAdmin = req.user && req.user.role === "admin";
     return next()
 })
 
@@ -122,6 +123,11 @@ const mongoose = require('mongoose');
 const Listing = require('./models/listing.js');
 const Review = require('./models/review.js');
 const { data: sampleListings, reviews: sampleReviews } = require('./init/data.js');
+const normalizeAdminEmails = (value) =>
+    value
+        .split(",")
+        .map((email) => email.trim().toLowerCase())
+        .filter(Boolean);
 
 
 const MONGO_URL = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/BNB_Website";
@@ -136,7 +142,28 @@ main().then(()=>{
 
 async function main(){
     await mongoose.connect(MONGO_URL);
+    await syncAdminUsers();
     await seedDB();
+}
+
+async function syncAdminUsers() {
+    const adminEmails = normalizeAdminEmails(process.env.ADMIN_EMAILS || "");
+    if (!adminEmails.length) {
+        return;
+    }
+    const result = await User.updateMany(
+        { email: { $in: adminEmails } },
+        { $set: { role: "admin" } }
+    );
+    const matchedCount = await User.countDocuments({ email: { $in: adminEmails } });
+    if (result.modifiedCount) {
+        console.log(`Admin roles synced for ${result.modifiedCount} users`);
+    }
+    if (!matchedCount) {
+        console.log("Admin sync: no matching users found for ADMIN_EMAILS");
+        return;
+    }
+    console.log(`Admin sync: ${matchedCount} admin account(s) active`);
 }
 
 async function seedDB(){

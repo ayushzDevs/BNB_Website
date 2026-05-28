@@ -22,5 +22,18 @@ const isOwner = async (req, res, next) => {
   }
   next();
 };
+const isOwnerOrAdmin = async (req, res, next) => {
+  const { id } = req.params;
+  const listing = await Listing.findById(id);
+  if (!listing) {
+    throw new errors(404, "Listing Not Found");
+  }
+  const isAdmin = req.user && req.user.role === "admin";
+  if (isAdmin || (listing.owner && listing.owner.equals(req.user._id))) {
+    return next();
+  }
+  req.flash("error", "You do not have permission to do that.");
+  return res.redirect(`/listings/${id}`);
+};
 
-module.exports = { isLoggedIn, isOwner };
+module.exports = { isLoggedIn, isOwner, isOwnerOrAdmin };

@@ -11,7 +11,12 @@ const renderRegister = (req, res) => {
 const register = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
-    const user = new User({ username, email });
+    const adminEmails = (process.env.ADMIN_EMAILS || "")
+      .split(",")
+      .map((value) => value.trim().toLowerCase())
+      .filter(Boolean);
+    const isAdmin = adminEmails.includes((email || "").toLowerCase());
+    const user = new User({ username, email, role: isAdmin ? "admin" : "user" });
     const registeredUser = await User.register(user, password);
     req.login(registeredUser, (err) => {
       if (err) {

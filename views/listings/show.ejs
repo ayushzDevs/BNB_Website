@@ -7,7 +7,12 @@
         </div>
         <div class="listing-show-body">
             <div class="listing-show-heading">
-                <h1><%= listings.title %></h1>
+                <div class="listing-title-wrap">
+                    <h1><%= listings.title %></h1>
+                    <% if (isAdmin) { %>
+                        <span class="admin-badge subtle">Admin view</span>
+                    <% } %>
+                </div>
                 <span class="listing-price">$<%= listings.price %></span>
             </div>
             <p class="listing-show-description"><%= listings.description %></p>
@@ -20,13 +25,9 @@
                     <span class="listing-show-label">Country</span>
                     <span class="listing-show-value"><%= listings.country %></span>
                 </div>
-                <div>
-                    <span class="listing-show-label">Listing ID</span>
-                    <span class="listing-show-value">#<%= listings._id %></span>
-                </div>
             </div>
             <div class="listing-show-actions">
-                <% if (currentUser && listings.owner && listings.owner.toString() === currentUser._id.toString()) { %>
+                <% if (currentUser && (isAdmin || (listings.owner && listings.owner.toString() === currentUser._id.toString()))) { %>
                     <a href="/listings/<%= listings._id %>/edit" class="btn-primary">Edit Listing</a>
                     <form action="/listings/<%= listings._id %>?_method=DELETE" method="post">
                         <button type="submit" class="btn-danger">Delete</button>

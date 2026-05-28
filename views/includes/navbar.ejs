@@ -3,6 +3,9 @@
     <a class="nav-brand" href="/">
       <span class="brand-mark"><i class="fa-regular fa-compass"></i></span>
       <span class="brand-text">BNB Couples</span>
+      <% if (isAdmin) { %>
+        <span class="admin-badge">Admin</span>
+      <% } %>
     </a>
     <div class="nav-links">
       <a class="nav-link" href="/">Home</a>

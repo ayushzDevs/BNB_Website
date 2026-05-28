@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync.js");
-const { isLoggedIn, isOwner } = require("../utils/auth.js");
+const { isLoggedIn, isOwnerOrAdmin } = require("../utils/auth.js");
 const { validateListing, validateReview } = require("../middleware/validate.js");
 const listingController = require("../controllers/listings.js");
 
@@ -28,13 +28,13 @@ router.delete("/:id/reviews/:reviewId", wrapAsync(listingController.deleteReview
 
 
 // update route
-router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync(listingController.renderEdit));
+router.get("/:id/edit", isLoggedIn, isOwnerOrAdmin, wrapAsync(listingController.renderEdit));
 
-router.put("/:id", isLoggedIn, isOwner, validateListing, wrapAsync(listingController.updateListing));
+router.put("/:id", isLoggedIn, isOwnerOrAdmin, validateListing, wrapAsync(listingController.updateListing));
 
 
 
 // delete route
-router.delete("/:id", isLoggedIn, isOwner, wrapAsync(listingController.deleteListing));
+router.delete("/:id", isLoggedIn, isOwnerOrAdmin, wrapAsync(listingController.deleteListing));
 
 module.exports = router;
