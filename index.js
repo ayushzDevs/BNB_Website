@@ -9,6 +9,11 @@ const session = require("express-session");
 const flash = require("connect-flash");
 
 
+// authentication requires
+const passport = require("passport");
+const localStrategy = require("passport-local");
+const User = require("./models/user.model.js");
+
 
 
 // cookies
@@ -41,10 +46,21 @@ const sessionOptions = {
 app.use(session(sessionOptions));
 app.use(flash());
 
+//authentication apply
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
 app.use((req,res,next)=>{
     res.locals.success = req.flash("success");
     return next()
 })
+
+
 
 
 app.get("/verify",(req,res)=>{
@@ -151,6 +167,18 @@ async function seedDB(){
 // routes
 app.get("/",(req,res)=>{
     res.send("I am root")     
+})
+
+
+app.get("/demouser",async(req,res)=>{
+
+    let fakeUser = new User({
+        email:"student1@mail.com",
+        username: "stud"
+    });
+
+    User.register(fakeUser,"Ash");
+
 })
 
 
