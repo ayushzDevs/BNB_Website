@@ -1,24 +1,63 @@
-<% layout("/layouts/boilerplate") %> <%= success %>
-<body>
-    <b><h2>BNB_Couples</h2></b>
-    <div class="listings-grid">
+<% layout("/layouts/boilerplate") %>
+
+<section class="hero">
+    <div class="hero-content">
+        <span class="eyebrow">Curated stays for two</span>
+        <h1>Design-forward escapes with a boutique feel.</h1>
+        <p>Discover handpicked listings built for slow mornings, bold interiors, and weekend resets.</p>
+        <div class="hero-actions">
+            <a class="btn-primary" href="/listings">Explore Listings</a>
+            <% if (currentUser) { %>
+                <a class="btn-ghost" href="/listings/new">Add Listing</a>
+            <% } else { %>
+                <a class="btn-ghost" href="/login">Login to Host</a>
+            <% } %>
+        </div>
+    </div>
+    <div class="hero-panel">
+        <div class="panel-top">
+            <span class="panel-title">Guest favorites</span>
+            <span class="panel-count"><%= allListings.length %> stays</span>
+        </div>
+        <p class="panel-copy">Each listing is reviewed for comfort, vibe, and the small details that make weekends unforgettable.</p>
+        <div class="panel-tags">
+            <span>Design-led</span>
+            <span>Couples only</span>
+            <span>Verified hosts</span>
+        </div>
+    </div>
+</section>
+
+<section class="section-header">
+    <h2>Available right now</h2>
+    <p>Browse stays with thoughtful design, easy check-in, and local charm.</p>
+</section>
+
+<section class="cards-grid">
     <% allListings.forEach(listing=>{ %>
-        <div class="listing-card">
-            <a href="/listings/<%= listing._id %>" class="btn-primary">
-                <div class="card">
-                    <img src="<%= listing.image %>" class="card-img-top" alt="<%= listing.title %>">
-                    <div class="card-body">
-                        <h5 class="card-title"><%= listing.title %></h5>
-                        <p class="card-text"><%= listing.description %></p>
-                        <p class="card-text2"><strong>Price: <%= listing.price %></strong></p>
-                        <a href="/listings/<%= listing._id %>/edit" class="btn btn-warning">Edit</a>
-                        <form action="/listings/<%= listing._id %>?_method=DELETE" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-danger">Delete</button>
+        <article class="listing-tile">
+            <a href="/listings/<%= listing._id %>" class="tile-media">
+                <img src="<%= listing.image %>" alt="<%= listing.title %>">
+            </a>
+            <div class="tile-body">
+                <div class="tile-head">
+                    <h3><%= listing.title %></h3>
+                    <span class="tile-price">$<%= listing.price %></span>
+                </div>
+                <p class="tile-copy"><%= listing.description %></p>
+                <div class="tile-meta">
+                    <span><%= listing.location %></span>
+                    <span><%= listing.country %></span>
+                </div>
+                <% if (currentUser && listing.owner && listing.owner.toString() === currentUser._id.toString()) { %>
+                    <div class="tile-actions">
+                        <a href="/listings/<%= listing._id %>/edit" class="btn-ghost">Edit</a>
+                        <form action="/listings/<%= listing._id %>?_method=DELETE" method="post">
+                            <button type="submit" class="btn-danger">Delete</button>
                         </form>
                     </div>
-                </div>
-            </a>
-        </div>
+                <% } %>
+            </div>
+        </article>
     <% }) %>
-</div>
-</body>
+</section>

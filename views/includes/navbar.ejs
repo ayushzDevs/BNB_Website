@@ -1,18 +1,24 @@
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/"><i class="fa-regular fa-compass"></i></a>
-    <button class="navbar-toggler" type="button" 
-    data-bs-toggle="collapse" 
-    data-bs-target="#navbarNavAltMarkup">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link"  href="/">Home</a>
-        <a class="nav-link" href="/listings">All Listings</a>
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="nav-brand" href="/">
+      <span class="brand-mark"><i class="fa-regular fa-compass"></i></span>
+      <span class="brand-text">BNB Couples</span>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="/">Home</a>
+      <a class="nav-link" href="/listings">All Listings</a>
+      <% if (currentUser) { %>
         <a class="nav-link" href="/listings/new">Add Listing</a>
-        <!-- <a class="nav-link disabled" aria-disabled="true">Disabled</a> -->
-      </div>
+      <% } %>
+    </div>
+    <div class="nav-actions">
+      <% if (currentUser) { %>
+        <form action="/logout" method="post">
+          <button class="btn-outline" type="submit">Logout</button>
+        </form>
+      <% } else { %>
+        <a class="btn-outline" href="/login">Login</a>
+      <% } %>
     </div>
   </div>
 </nav>

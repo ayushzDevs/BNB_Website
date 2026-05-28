@@ -1,7 +1,8 @@
 // express app setup
+require("dotenv").config();
 const express = require('express');
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 
 
@@ -18,7 +19,8 @@ const User = require("./models/user.model.js");
 
 // cookies
 const cookieParser = require('cookie-parser');
-app.use(cookieParser("secretcode"));
+const cookieSecret = process.env.COOKIE_SECRET || "dev-cookie-secret";
+app.use(cookieParser(cookieSecret));
 
 app.use((req, res, next) => {
   res.cookie("clientIp", req.ip, {
@@ -33,7 +35,7 @@ app.use((req, res, next) => {
 
 
 const sessionOptions = {
-    secret : "mysupersecretcode",
+    secret : process.env.SESSION_SECRET || "dev-session-secret",
     resave: false,
     saveUninitialized:true,
     cookie:{
@@ -57,6 +59,8 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next)=>{
     res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    res.locals.currentUser = req.user;
     return next()
 })
 
@@ -88,8 +92,6 @@ const handlevalidationError = (err) => {
 
 
 
-// schema validation
-const { listingschema, reviewSchema } = require('./schema.js');
 
 // view engine setup
 const path = require('path');
@@ -113,8 +115,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 
 
-// async wrapper for error handling in async functions
-const wrapAsync = require('./utils/wrapAsync.js');
 
 
 // database setup
@@ -124,7 +124,7 @@ const Review = require('./models/review.js');
 const { data: sampleListings, reviews: sampleReviews } = require('./init/data.js');
 
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/BNB_Website"
+const MONGO_URL = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/BNB_Website";
 
 main().then(()=>{
     console.log("Connected to MongoDB");
@@ -176,9 +176,8 @@ app.get("/demouser",async(req,res)=>{
         email:"student1@mail.com",
         username: "stud"
     });
-
-    User.register(fakeUser,"Ash");
-
+    await User.register(fakeUser,"Ash");
+    res.send("Demo user created");
 })
 
 
@@ -199,6 +198,9 @@ app.get("/demouser",async(req,res)=>{
 
 const listingRoute = require('./routes/listing.js');
 app.use("/listings", listingRoute);
+
+const userRoute = require('./routes/user.js');
+app.use("/", userRoute);
 
 
 

@@ -1,60 +1,67 @@
 <% layout("/layouts/boilerplate") %>
-<body>
-    <section class="listing-show">
-        <div class="listing-show-card">
-            <div class="listing-show-media">
-                <img src="<%= listings.image %>" alt="<%= listings.title %>">
-            </div>
-            <div class="listing-show-body">
-                <div class="listing-show-heading">
-                    <h1><%= listings.title %></h1>
-                </div>
-                <p class="listing-show-description"><%= listings.description %></p>
-                <div class="listing-show-meta">
-                    <div>
-                        <span class="listing-show-label">Price</span>
-                        <span class="listing-show-value">$<%= listings.price %></span>
-                    </div>
-                    <div>
-                        <span class="listing-show-label">Location</span>
-                        <span class="listing-show-value"><%= listings.location %></span>
-                    </div>
-                    <div>
-                        <span class="listing-show-label">Country</span>
-                        <span class="listing-show-value"><%= listings.country %></span>
-                    </div>
-                </div>
-                <div class="listing-show-actions">
-                    <a href="/listings/<%= listings._id %>/edit" class="listing-show-btn primary">Edit Listing</a>
-                    <form action="/listings/<%= listings._id %>?_method=DELETE" method="post">
-                        <button type="submit" class="listing-show-btn danger">Delete</button>
-                    </form>
-                </div>
 
+<section class="listing-show">
+    <div class="listing-show-card">
+        <div class="listing-show-media">
+            <img src="<%= listings.image %>" alt="<%= listings.title %>">
+        </div>
+        <div class="listing-show-body">
+            <div class="listing-show-heading">
+                <h1><%= listings.title %></h1>
+                <span class="listing-price">$<%= listings.price %></span>
+            </div>
+            <p class="listing-show-description"><%= listings.description %></p>
+            <div class="listing-show-meta">
                 <div>
-                    <h4>Reviews:</h4>
-                    <% listings.reviews.forEach(review => { %>
-                        <div class="review">
-                            <p><strong>Rating:</strong> <%= review.rating %> / 5</p>
-                            <p><%= review.comment %></p>
-                            <form action="/listings/<%= listings._id %>/reviews/<%= review._id %>?_method=DELETE" method="post">
-                                <button type="submit" class="listing-show-btn danger">Delete Review</button>
-                            </form>
-                        </div>
-                    <% }) %>
-                    <form action="/listings/<%= listings._id %>/reviews" method="post">
-                        <div>
-                            <label for="rating">Add Rating</label>
-                            <input id="rating" name="review[rating]" type="range" min="1" max="5" step="1" required>
-                        </div>
-                        <div>
-                            <label for="comment">comments</label>
-                            <textarea name="review[comment]" id="comment" cols="30" rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="listing-show-btn primary">Submit Review</button>
-                    </form>
+                    <span class="listing-show-label">Location</span>
+                    <span class="listing-show-value"><%= listings.location %></span>
                 </div>
+                <div>
+                    <span class="listing-show-label">Country</span>
+                    <span class="listing-show-value"><%= listings.country %></span>
+                </div>
+                <div>
+                    <span class="listing-show-label">Listing ID</span>
+                    <span class="listing-show-value">#<%= listings._id %></span>
+                </div>
+            </div>
+            <div class="listing-show-actions">
+                <% if (currentUser && listings.owner && listings.owner.toString() === currentUser._id.toString()) { %>
+                    <a href="/listings/<%= listings._id %>/edit" class="btn-primary">Edit Listing</a>
+                    <form action="/listings/<%= listings._id %>?_method=DELETE" method="post">
+                        <button type="submit" class="btn-danger">Delete</button>
+                    </form>
+                <% } %>
             </div>
         </div>
-    </section>
-</body>
+    </div>
+
+    <div class="reviews-section">
+        <div class="section-header compact">
+            <h2>Reviews</h2>
+            <p>Share how the space made you feel.</p>
+        </div>
+        <div class="reviews-grid">
+            <% listings.reviews.forEach(review => { %>
+                <article class="review-card">
+                    <div class="review-rating">Rating: <strong><%= review.rating %></strong> / 5</div>
+                    <p class="review-copy"><%= review.comment %></p>
+                    <form action="/listings/<%= listings._id %>/reviews/<%= review._id %>?_method=DELETE" method="post">
+                        <button type="submit" class="btn-ghost">Delete Review</button>
+                    </form>
+                </article>
+            <% }) %>
+        </div>
+        <form action="/listings/<%= listings._id %>/reviews" method="post" class="form-card">
+            <div class="form-row">
+                <label for="rating">Add Rating</label>
+                <input id="rating" name="review[rating]" type="range" min="1" max="5" step="1" required>
+            </div>
+            <div class="form-row">
+                <label for="comment">Comments</label>
+                <textarea name="review[comment]" id="comment" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Submit Review</button>
+        </form>
+    </div>
+</section>
